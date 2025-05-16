@@ -1,0 +1,9 @@
+services:
+  app:
+    image: oven/bun:1
+    working_dir: /app
+    command: [ "sh", "entrypoint.sh" ]
+    volumes:
+      - .:/app:rw
+    ports:
+      - "3000:3000"
