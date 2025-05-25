@@ -1,31 +1,31 @@
 body {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 .main-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
 }
 
 .grids-container-parent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 2vw;
+
+  .grids-container-child {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+  }
+
+  .grids-container-header {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
     align-items: center;
-    gap: 2vw;
-
-    .grids-container-child {
-        display: flex;
-        flex-direction: column;
-        max-height: 80vh;
-    }
-
-    .grids-container-header {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
+  }
 }
