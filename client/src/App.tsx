@@ -7,7 +7,7 @@ import {Info} from "@mui/icons-material";
 import {useState} from "react";
 
 const App = () => {
-    const rows: DemoRow[] = generateRandomRows(1000)
+    const [rows] = useState<DemoRow[]>(generateRandomRows(1000));
     const [dialogOpen, setDialogOpen] = useState<string | undefined>(undefined);
 
     const API_DRIVEN = 'api-driven';
