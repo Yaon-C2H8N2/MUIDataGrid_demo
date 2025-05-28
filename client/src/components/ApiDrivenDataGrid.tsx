@@ -5,6 +5,7 @@ import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useState } from 'react';
 import type { DemoRow } from '../models/DemoRow.ts';
 import './Grids.css';
+import GridNameEdit from './GridNameEdit.tsx';
 
 interface IProps {
   rows: DemoRow[];
@@ -25,7 +26,25 @@ const ApiDrivenDataGrid = (props: IProps) => {
   });
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name' },
+    {
+      field: 'name',
+      headerName: 'Name',
+      editable: true,
+      renderEditCell: (params) => {
+        return (
+          <GridNameEdit
+            onChange={(value) =>
+              params.api.setEditCellValue({
+                id: params.id,
+                field: 'name',
+                value: value,
+              })
+            }
+            value={params.value}
+          />
+        );
+      },
+    },
     { field: 'description', headerName: 'Description' },
     { field: 'createdAt', headerName: 'Creation date', type: 'date' },
     { field: 'updatedAt', headerName: 'Last update', type: 'date' },
@@ -112,6 +131,7 @@ const ApiDrivenDataGrid = (props: IProps) => {
         columns={columns}
         disableColumnMenu={true}
         disableColumnSorting={true}
+        //processRowUpdate={(...)} Ici pas besoin de définir de logique de mise à jour puisque pas de state à mettre à jour également
         filterModel={{
           items: [
             {

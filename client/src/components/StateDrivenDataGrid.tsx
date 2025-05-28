@@ -5,6 +5,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useEffect, useState } from 'react';
 import type { DemoRow } from '../models/DemoRow.ts';
 import './Grids.css';
+import GridNameEdit from './GridNameEdit.tsx';
 
 interface IProps {
   rows: DemoRow[];
@@ -31,7 +32,28 @@ const StateDrivenDataGrid = (props: IProps) => {
   }, [filters, unfilteredRows]);
 
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Name' },
+    {
+      field: 'name',
+      headerName: 'Name',
+      editable: true,
+      renderEditCell: (params) => {
+        return (
+          <GridNameEdit
+            onChange={(value) =>
+              // Pas d'autre moyen que de passer par la GridApi pour mettre à jour la valeur de la cellule en cours d'édition.
+              // Attention, (valeur de la cellule en cours d'édition) != (valeur de la cellule dans la ligne).
+              // La DataGrid manipule les deux valeurs séparément afin de pouvoir revenir en arrière si l'utilisateur annule l'édition.
+              params.api.setEditCellValue({
+                id: params.id,
+                field: 'name',
+                value: value,
+              })
+            }
+            value={params.value}
+          />
+        );
+      },
+    },
     { field: 'description', headerName: 'Description' },
     { field: 'createdAt', headerName: 'Creation date', type: 'date' },
     { field: 'updatedAt', headerName: 'Last update', type: 'date' },
@@ -159,6 +181,15 @@ const StateDrivenDataGrid = (props: IProps) => {
         disableColumnSorting={true}
         rows={rows}
         columns={columns}
+        processRowUpdate={(newRow: DemoRow) => {
+          //Est appelé lorsque la cellule/ligne est terminée d'être éditée. La grille mettra à jour la ligne avec la ligne retournée par cette fonction.
+          //On est également obligé de mettre à jour le state unfilteredRows sinon la ligne reviendra à sa valeur précédente dès que le state rows sera mis à jour.
+          const updatedRows = unfilteredRows.map((row) =>
+            row.id === newRow.id ? { ...row, ...newRow } : row,
+          );
+          setUnfilteredRows(updatedRows);
+          return newRow;
+        }}
       />
     </>
   );
